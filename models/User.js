@@ -22,13 +22,10 @@ const UserSchema = new mongoose.Schema({
 		max: 8,
 		unique: true
 
-	},
-	transactions:{
-		type: Array,
-		default: []
-	},	
+	},		
 },
 {timestamps: true}
 )
 
-module.exports = mongoose.model("User", UserSchema)
+const User = mongoose.model("User", UserSchema)
+module.exports = User

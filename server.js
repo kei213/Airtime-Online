@@ -1,11 +1,13 @@
 require("dotenv").config()
 const express = require("express")
+var cors = require('cors')
 const mongoose = require("mongoose")
 const helmet = require("helmet")
-const morgan = require("helmet")
+const morgan = require("morgan")
 const PORT = process.env.PORT || 3000
 const userRoutes = require('./routes/users')
 const authRoutes = require('./routes/auth')
+const transactionRoutes = require('./routes/transactions')
 
 // express app
 const app = express()
@@ -14,11 +16,14 @@ const app = express()
 app.use(express.json())
 app.use(helmet())
 app.use(morgan("common"))
+app.use(cors())
+app.use(morgan('dev')) // Log all requests to the console
 
 
 // routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/transactions", transactionRoutes);
 
 // connect to db
 mongoose

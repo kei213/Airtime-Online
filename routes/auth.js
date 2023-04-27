@@ -1,14 +1,15 @@
 const router = require("express").Router();
+const bcrypt = require("bcrypt");
 const User = require("../models/User");
 
 // register a single user
 router.post("/register", async (req, res) => {
-
 	// add doc to db
 	try {
-		const salt = await bcrypt.genSalt(10)
-		const hashedPassword = await bcrypt.hash(req.body.password, salt)
-		const { username, password, phonenumber } = req.body
+		const salt = await bcrypt.genSalt(10);
+		const hashedPassword = await bcrypt.hash(req.body.password, salt);
+		const { username, password, phonenumber } = req.body;
+		console.log("username - ", username);
 		const newUser = await User.create({
 			username,
 			password,
@@ -21,23 +22,21 @@ router.post("/register", async (req, res) => {
 });
 
 // login user
-router.post("login", async (req, res) => {
+router.post("/login", async (req, res) => {
 	try {
-        const user = await User.findOne({email: req.body.email})
-        if (!user) {
-        	return res.status(404).json("user not found")
-        }
+		const user = await User.findOne({ username: req.body.username });
+		if (!user) {
+			return res.status(404).json("user not found");
+		}
 
-        const validPassword = await bcrypt.compare(req.body.password, user.password)
+		/*const validPassword = await bcrypt.compare(req.body.password, user.password)
         if (!validPassword) {
         	return res.status(400).json("wrong password")
-        }
-        res.status(200).json(user)
-        
-	} catch(error) {
-        res.status(500).json({error: error.message})
+        }*/
+		res.status(200).json(user);
+	} catch (error) {
+		res.status(500).json({ error: error.message });
 	}
-	
-})
+});
 
 module.exports = router;
